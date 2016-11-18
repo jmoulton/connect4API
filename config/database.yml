@@ -1,0 +1,17 @@
+default: &default
+  adapter: postgresql
+  database: connect4_api
+  username: postgres
+  password: postgres
+  host: localhost
+  timeout: 5000
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  database: connect4_api_test
+
+production:
+  <<: *default
