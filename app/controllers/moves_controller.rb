@@ -9,6 +9,6 @@ class MovesController < ApplicationController
   private
 
   def create_params
-    params.permit(:player, :coordinate)
+    params.permit(:player, :coordinate, :game_id)
   end
 end
