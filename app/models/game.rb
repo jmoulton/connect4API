@@ -4,6 +4,8 @@ class Game < ApplicationRecord
   def process_board(board)
     return true if check_vertical(board)
     return true if check_horizontal(board)
+    return true if check_right_diagonal(board)
+    return true if check_left_diagonal(board)
     return false
   end
 
@@ -21,7 +23,51 @@ class Game < ApplicationRecord
       return true if sequence_check(arr)
     end
 
-    false
+    return false
+  end
+
+  def check_right_diagonal(board)
+    board.first(4).each_with_index do |col, column_index|
+      col.each_with_index do |val, val_index|
+        arr = Array.new(val_index + 1)
+        arr[0] = val
+        cursor = column_index
+        cursor2 = val_index
+        arr.count.times do |arr_index|
+          unless arr_index == 0
+            arr[arr_index] = board[cursor + 1][cursor2 - 1]
+            cursor2 -= 1
+            cursor += 1
+          end
+        end
+
+        return true if sequence_check(arr.compact)
+      end
+    end
+
+    return false
+  end
+
+  def check_left_diagonal(board)
+    board.first(4).each_with_index do |col, column_index|
+      col.each_with_index do |val, val_index|
+        arr = Array.new(board.count - column_index)
+        arr[0] = val
+        cursor = column_index
+        cursor2 = val_index
+        arr.count.times do |arr_index|
+          unless arr_index == 0
+            arr[arr_index] = board[cursor + 1][cursor2 + 1]
+            cursor2 += 1
+            cursor += 1
+          end
+        end
+
+        return true if sequence_check(arr.compact)
+      end
+    end
+
+    return false
   end
 
   def sequence_check(arr)
