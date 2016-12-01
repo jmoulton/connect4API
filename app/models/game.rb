@@ -19,8 +19,14 @@ class Game < ApplicationRecord
 
   def check_horizontal(board)
     board.count.times do |index|
-      arr = board.map { |cols| cols[index] }.compact
-      return true if sequence_check(arr)
+      arr = board.map do |cols|
+        if cols.empty? || cols.nil?
+          { "turn" => "" }
+        else
+          cols[index]
+        end
+      end
+      return true if sequence_check(arr.compact)
     end
 
     return false
@@ -29,7 +35,8 @@ class Game < ApplicationRecord
   def check_right_diagonal(board)
     board.first(4).each_with_index do |col, column_index|
       col.each_with_index do |val, val_index|
-        arr = Array.new(val_index + 1)
+        size = (column_index == 3 && val_index + 1 > 4) ? 4 : val_index + 1
+        arr = Array.new(size)
         arr[0] = val
         cursor = column_index
         cursor2 = val_index
@@ -83,7 +90,8 @@ class Game < ApplicationRecord
         end
 
         last_token = "player"
-      else
+
+      elsif column["turn"] == "cpu"
         if last_token == "cpu"
           total += 1
         else
@@ -91,6 +99,8 @@ class Game < ApplicationRecord
         end
 
         last_token = "cpu"
+      else
+        last_token = ""
       end
 
       return true if total >=4
