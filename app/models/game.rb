@@ -26,7 +26,7 @@ class Game < ApplicationRecord
           cols[index]
         end
       end
-      return true if sequence_check(arr.compact)
+      return true if sequence_check(arr)
     end
 
     return false
@@ -48,7 +48,7 @@ class Game < ApplicationRecord
           end
         end
 
-        return true if sequence_check(arr.compact)
+        return true if sequence_check(arr)
       end
     end
 
@@ -70,7 +70,7 @@ class Game < ApplicationRecord
           end
         end
 
-        return true if sequence_check(arr.compact)
+        return true if sequence_check(arr)
       end
     end
 
@@ -82,25 +82,29 @@ class Game < ApplicationRecord
     last_token = nil
 
     arr.each do |column|
-      if column["turn"] == "player"
-        if last_token == "player"
-          total += 1
-        else
-          total = 1
-        end
-
-        last_token = "player"
-
-      elsif column["turn"] == "cpu"
-        if last_token == "cpu"
-          total += 1
-        else
-          total = 1
-        end
-
-        last_token = "cpu"
+      if column.nil?
+        last_token = nil
       else
-        last_token = ""
+        if column["turn"] == "player"
+          if last_token == "player"
+            total += 1
+          else
+            total = 1
+          end
+
+          last_token = "player"
+
+        elsif column["turn"] == "cpu"
+          if last_token == "cpu"
+            total += 1
+          else
+            total = 1
+          end
+
+          last_token = "cpu"
+        else
+          last_token = ""
+        end
       end
 
       return true if total >=4
